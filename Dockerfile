@@ -1,4 +1,4 @@
-FROM python3.6
+FROM python:3.6
 
 RUN mkdir /one_two_shop
 WORKDIR /one_two_shop

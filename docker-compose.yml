@@ -7,6 +7,8 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
             - POSTGRES_DB=postgres
+        networks: 
+            - one_two_shop_backend
 
     one_two_shop_web:
         build: .
@@ -15,7 +17,12 @@ services:
             - .:/one_two_shop 
         ports: 
             - 8000:8000
-        links:
-            - one_two_shop_db
         depends_on: 
             - one_two_shop_db
+        networks: 
+            - one_two_shop_frontend
+            - one_two_shop_backend
+
+networks: 
+    one_two_shop_frontend:
+    one_two_shop_backend:
