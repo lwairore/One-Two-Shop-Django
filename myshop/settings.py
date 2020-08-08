@@ -20,13 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'd(mdk1nc--3x8mb86p1hz39gb1=ft-s4v0(mfv=&3ll(b9ofhx'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '0.0.0.0',
+    'XXX.XXX.XXX.XXX',
+    
 ]
 
 
@@ -77,15 +78,71 @@ WSGI_APPLICATION = 'myshop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'HOST': os.environ['DB_HOST'],
-        'PASSWORD': os.environ['DB_PASSWORD']
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['DB_NAME'],
+            'USER': os.environ['DB_USER'],
+            'HOST': os.environ['DB_HOST'],
+            'PASSWORD': os.environ['DB_PASSWORD']
+        }
     }
-}
+
+    STATIC_URL = '/static/'
+    
+    MEDIA_URL = '/media/'
+
+
+
+else:
+    DATABASES = {
+        'default': {
+            # If you are using Cloud SQL for MySQL rather than PostgreSQL, set
+            # 'ENGINE': 'django.db.backends.mysql' instead of the following.
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['DB_NAME_CLOUD_SQL'],
+            'USER': os.environ['DB_USER_CLOUD_SQL'],
+            'PASSWORD': os.environ['DB_PASSWORD_CLOUD_SQL'],
+            # For MySQL, set 'PORT': '3306' instead of the following. Any Cloud
+            # SQL Proxy instances running locally must also be set to tcp:3306.
+            'PORT': os.environ['DB_PORT_CLOUD_SQL'],
+            'HOST': os.environ['DB_HOST_CLOUD_SQL']
+        }
+    }
+
+    # if os.getenv('GAE_INSTANCE'):
+    #     pass
+    # else:
+    #     DATABASES['default']['HOST'] = '127.0.0.1'
+
+    # Add the correct GoogleApplicationCredentials
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'secrets/one-two-shop.json'
+
+    # Define the default file storage for static
+
+    GS_MEDIA_BUCKET_NAME = os.environ['MEDIA_BUCKET_NAME']
+
+    GS_STATIC_BUCKET_NAME = os.environ['STATIC_BUCKET_NAME']
+
+    DEFAULT_FILE_STORAGE = 'config.storage_backends.GoogleCloudMediaStorage'
+
+    STATICFILES_STORAGE = 'config.storage_backends.GoogleCloudStaticStorage'
+
+    STATIC_URL = 'https://storage.googleapis.com/{}/'.format(GS_STATIC_BUCKET_NAME)
+
+    # STATIC_ROOT = os.path.join(BASE_DIR, '/static')
+
+    # STATICFILES_DIRS = [
+    #     # os.path.join(BASE_DIR, 'staticfiles')
+    # ]
+
+    MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
+
+
+
 
 
 # Password validation
@@ -124,4 +181,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+
