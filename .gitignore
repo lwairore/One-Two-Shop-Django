@@ -1,3 +1,8 @@
 **/__pycache__/*
 **/migrations/*
 **/secrets/*
+dist/
+.dockerignore
+.gcloudignore
+app.yaml
+*.sh
