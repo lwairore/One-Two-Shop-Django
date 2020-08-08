@@ -6,7 +6,7 @@
 </table>
 
 ## Demo
-Here is a working live demo: 
+Here is a working live demo: https://one-two-shop.uc.r.appspot.com/
 
 ### Development
 Want to contribute? Great!
