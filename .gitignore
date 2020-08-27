@@ -8,3 +8,4 @@ app.yaml
 *.sh
 Dockerfile
 docker-compose.yml
+env/
